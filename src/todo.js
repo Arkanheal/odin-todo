@@ -1,15 +1,10 @@
 export default class Todo {
-
   #title;
   #description;
   #dueDate;
   #priority;
-  #completionStatus;
 
-  constructor(title, description, dueDate, priority, completionStatus) {
-    if (!completionStatuses.includes(completionStatus.toUpperCase())) {
-      throw new Error("Invalid Completion Status.");
-    }
+  constructor(title, description, dueDate, priority) {
     if (!priorities.includes(priority.toUpperCase())) {
       throw new Error("Invalid priority value.");
     }
@@ -18,7 +13,6 @@ export default class Todo {
     this.#description = description;
     this.#dueDate = dueDate;
     this.#priority = priority;
-    this.#completionStatus = completionStatus;
   }
 
   get title() {
@@ -35,10 +29,6 @@ export default class Todo {
 
   get priority() {
     return this.#priority;
-  }
-
-  get completionStatus() {
-    return this.#completionStatus;
   }
 
   set title(title) {
@@ -59,15 +49,6 @@ export default class Todo {
     }
     this.#priority = priority;
   }
-
-  set completionStatus(completionStatus) {
-    if (!completionStatuses.includes(completionStatus.toUpperCase())) {
-      throw new Error("Invalid Completion Status.");
-    }
-    this.#completionStatus = completionStatus;
-  }
-
 }
 
-const completionStatuses = ["NOT STARTED", "IN PROGRESS", "DONE"];
 const priorities = ["LOW", "MEDIUM", "HIGH"];
