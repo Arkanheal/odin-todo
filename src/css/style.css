@@ -108,6 +108,10 @@ main > nav {
   padding-inline: var(--task-padding-inline);
 }
 
+#project-wrapper {
+  margin-right: var(--h1-font-size);
+}
+
 #add-project {
   background-color: rgba(32, 40, 219, 0.10);
 
