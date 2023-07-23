@@ -1,3 +1,5 @@
+import { displayBtn, displayForm } from "./dom-manipulation";
+
 export function createBaseHTML() {
   const body = document.querySelector("body");
 
@@ -38,10 +40,11 @@ function createNav() {
   navTag.appendChild(navHeader);
 
   const projectWrapperDiv = document.createElement("div");
-  projectWrapperDiv.id  = "project-wrapper";
+  projectWrapperDiv.id = "project-wrapper";
   navTag.appendChild(projectWrapperDiv);
 
   projectWrapperDiv.appendChild(createAddProjectButton());
+  projectWrapperDiv.appendChild(createProjectCreationForm());
 
   return navTag;
 }
@@ -56,9 +59,10 @@ function createContent() {
   contentDiv.appendChild(contentHeader);
 
   const tasksWrapperDiv = document.createElement("div");
-  tasksWrapperDiv.id  = "tasks-wrapper";
+  tasksWrapperDiv.id = "tasks-wrapper";
 
   tasksWrapperDiv.appendChild(createAddTaskButton());
+  tasksWrapperDiv.appendChild(createTaskCreationForm());
 
   contentDiv.appendChild(tasksWrapperDiv);
 
@@ -79,6 +83,8 @@ function createAddTaskButton() {
   textSpan.textContent = "Add Task";
   addTaskBtn.appendChild(textSpan);
 
+  addTaskBtn.onclick = () => displayForm("task");
+
   return addTaskBtn;
 }
 
@@ -96,5 +102,83 @@ function createAddProjectButton() {
   textSpan.textContent = "Add Project";
   addProjectBtn.appendChild(textSpan);
 
+  addProjectBtn.onclick = () => displayForm("project");
+
   return addProjectBtn;
+}
+
+function createProjectCreationForm() {
+  const formTag = document.createElement("form");
+  formTag.id = "add-project-form";
+  formTag.action = "";
+  formTag.style.display = "none";
+
+  const nameInput = document.createElement("input");
+  nameInput.type = "text";
+  nameInput.required = true;
+  nameInput.minLength = 1;
+  formTag.appendChild(nameInput);
+
+  const cancelBtn = document.createElement("button");
+  cancelBtn.textContent = "Cancel";
+  cancelBtn.name = "cancel";
+  cancelBtn.value = "cancel";
+  cancelBtn.formNoValidate = true;
+
+  formTag.appendChild(cancelBtn);
+
+  const confirmBtn = document.createElement("button");
+  confirmBtn.textContent = "Confirm"
+  confirmBtn.name = "confirm"
+  formTag.appendChild(confirmBtn);
+
+  formTag.onsubmit = (e) => {
+    e.preventDefault();
+    const submitter = e.submitter;
+    if (submitter.value === "cancel") {
+      e.target.reset();
+      displayBtn("project");
+      return;
+    }
+  }
+
+  return formTag;
+}
+
+function createTaskCreationForm() {
+  const formTag = document.createElement("form");
+  formTag.id = "add-task-form";
+  formTag.action = "";
+  formTag.style.display = "none";
+
+  const nameInput = document.createElement("input");
+  nameInput.type = "text";
+  nameInput.required = true;
+  nameInput.minLength = 1;
+  formTag.appendChild(nameInput);
+
+  const cancelBtn = document.createElement("button");
+  cancelBtn.textContent = "Cancel";
+  cancelBtn.name = "cancel";
+  cancelBtn.value = "cancel";
+  cancelBtn.formNoValidate = true;
+
+  formTag.appendChild(cancelBtn);
+
+  const confirmBtn = document.createElement("button");
+  confirmBtn.textContent = "Confirm"
+  confirmBtn.name = "confirm"
+  formTag.appendChild(confirmBtn);
+
+  formTag.onsubmit = (e) => {
+    e.preventDefault();
+    const submitter = e.submitter;
+    if (submitter.value === "cancel") {
+      e.target.reset();
+      displayBtn("task");
+      return;
+    }
+  }
+
+  return formTag;
 }
