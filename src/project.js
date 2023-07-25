@@ -1,18 +1,28 @@
 export default class Project {
   #name;
   #todos;
+  #selected
 
-  constructor(name) {
+  constructor(name, selected) {
     this.#name = name;
     this.#todos = [];
+    this.#selected = selected;
   }
 
   set name(name) {
     this.#name = name;
   }
 
+  set selected(selected) {
+    this.#selected = selected;
+  }
+
   get name() {
     return this.#name;
+  }
+
+  get selected() {
+    return this.#selected;
   }
 
   get todos() {
@@ -24,4 +34,4 @@ export default class Project {
   }
 }
 
-export let projects = {"All Projects": new Project("All Projects")};
+export let projects = {"All Projects": new Project("All Projects", true)};

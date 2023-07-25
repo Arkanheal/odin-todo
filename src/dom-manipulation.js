@@ -67,6 +67,9 @@ export function displayProjects() {
   Object.keys(projects).forEach(element => {
     const projectDiv = document.createElement("div");
     projectDiv.classList.add("project");
+    if (projects[element].selected) {
+      projectDiv.classList.add("selected");
+    }
     projectDiv.textContent = element;
 
     projectDiv.onclick = projectOnClick;
@@ -75,10 +78,38 @@ export function displayProjects() {
   return projectDivs;
 }
 
+export function displayTodos() {
+  const projectDivs = [];
+  Object.keys(projects).forEach(element => {
+    const projectDiv = document.createElement("div");
+    projectDiv.classList.add("project");
+    if (projects[element].selected) {
+      projectDiv.classList.add("selected");
+    }
+    projectDiv.textContent = element;
+
+    projectDiv.onclick = projectOnClick;
+    projectDivs.push(projectDiv);
+  });
+  return projectDivs;
+}
+
+export function getSelectedProject() {
+  for (let name in projects) {
+    if (projects[name].selected)
+      return name;
+  }
+}
+
 function projectOnClick(e) {
-  updateContentHeader(e.target.textContent);
+  const projectName = e.target.textContent;
+  updateContentHeader(projectName);
   Array.from(e.target.parentNode.children).forEach(element => {
     element.classList.remove("selected");
   });
+
+  projects[getSelectedProject()].selected = false;
+  projects[projectName].selected = true;
+
   e.target.classList.add("selected");
 }
