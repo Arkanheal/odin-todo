@@ -53,9 +53,28 @@ export function displayProjects() {
     if (projects[element].selected) {
       projectDiv.classList.add("selected");
     }
-    projectDiv.textContent = element;
 
-    projectDiv.onclick = projectOnClick;
+    if (element !== "All Projects") {
+      const iconSpan = document.createElement("span");
+      iconSpan.textContent = "ο";
+      iconSpan.classList.add("project-icon");
+      projectDiv.appendChild(iconSpan);
+      iconSpan.onclick = (e) => {
+        const parent = e.target.parentNode;
+        delete projects[parent.lastChild.textContent];
+        console.log(projects);
+        parent.remove();
+        projects["All Projects"].selected = true;
+        updateContent();
+      };
+    }
+
+    const textSpan = document.createElement("span");
+    textSpan.classList.add("project-text");
+    textSpan.textContent = element;
+    textSpan.onclick = projectOnClick;
+    projectDiv.appendChild(textSpan);
+
     projectDivs.push(projectDiv);
   });
   return projectDivs;

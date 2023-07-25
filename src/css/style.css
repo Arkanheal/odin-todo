@@ -144,7 +144,7 @@ main > nav {
   color: var(--second-color);
 }
 
-#add-project-icon {
+#add-project-icon, .project-icon {
   padding-inline: var(--task-padding-inline);
 }
 
