@@ -1,4 +1,5 @@
-import { addProjects, addTask, displayBtn, displayForm, displayProjects, displayTodos, getSelectedProject } from "./dom-manipulation";
+import { addProjects, addTask, displayBtn, displayForm, displayProjects, displayTodos } from "./dom-manipulation";
+import { getSelected } from "./project";
 
 export function createBaseHTML() {
   const body = document.querySelector("body");
@@ -60,7 +61,7 @@ function createContent() {
 
   const contentHeader = document.createElement("h1");
   contentHeader.id = "content-header";
-  const selectedProject = getSelectedProject();
+  const selectedProject = getSelected();
   contentHeader.textContent = selectedProject;
   contentDiv.appendChild(contentHeader);
 
@@ -83,7 +84,7 @@ export function updateContent() {
   tasksWrapperDiv.innerHTML = "";
 
   const contentHeader = document.querySelector("#content-header");
-  const selectedProject = getSelectedProject();
+  const selectedProject = getSelected();
   contentHeader.textContent = selectedProject;
 
   const todoDivs = displayTodos(selectedProject);

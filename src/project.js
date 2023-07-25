@@ -15,4 +15,37 @@ export default class Project {
   }
 };
 
-export let projects = {"All Projects": new Project("All Projects", true)};
+let projects = { "All Projects": new Project("All Projects", true) };
+
+export function addProject(name) {
+  if (projects[name]) {
+    return;
+  }
+  projects[name] = new Project(name, false);
+  setLocalStorage();
+}
+
+export function removeProject(name) {
+  delete projects(name);
+  setLocalStorage();
+}
+
+export function getProject(name) {
+  return projects[name];
+}
+
+export function setProjects(jsonProjects) {
+  console.log(jsonProjects);
+  projects = jsonProjects;
+}
+
+export function getProjects() {
+  return projects;
+}
+
+export function getSelected() {
+  for (let name in projects) {
+    if (projects[name].selected)
+      return name;
+  }
+}

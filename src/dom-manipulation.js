@@ -1,5 +1,6 @@
-import { createBaseHTML, createNav, updateContent } from "./dom-creation";
-import Project, { projects } from "./project";
+import { createBaseHTML, updateContent } from "./dom-creation";
+import { setLocalStorage } from "./localstorage";
+import { addProject, getProject, getProjects, getSelected, removeProject } from "./project";
 import Todo from "./todo";
 
 export function displayForm(type) {
@@ -20,22 +21,20 @@ export function displayBtn(type) {
 
 export function addTask(name) {
   const newTask = new Todo(name, "", "", "LOW");
-  const currentProjectName = getSelectedProject();
+  const currentProjectName = getSelected();
   if (currentProjectName !== "All Projects") {
-    projects["All Projects"].addTodo(newTask);
+    getProject("All Projects").addTodo(newTask);
   }
-  const currentProject = projects[getSelectedProject()];
+  const currentProject = getProject(getSelected());
   currentProject.addTodo(newTask);
 
+  setLocalStorage();
   updateContent();
   displayBtn("task");
 }
 
 export function addProjects(name) {
-  if (Object.keys(projects).includes(name)) {
-    return;
-  }
-  projects[name] = new Project(name);
+  addProject(name);
   createBaseHTML();
   displayBtn("project");
 }
@@ -47,10 +46,10 @@ function updateContentHeader(projectName) {
 
 export function displayProjects() {
   const projectDivs = [];
-  Object.keys(projects).forEach(element => {
+  Object.keys(getProjects()).forEach(element => {
     const projectDiv = document.createElement("div");
     projectDiv.classList.add("project");
-    if (projects[element].selected) {
+    if (getProject(element).selected) {
       projectDiv.classList.add("selected");
     }
 
@@ -61,10 +60,9 @@ export function displayProjects() {
       projectDiv.appendChild(iconSpan);
       iconSpan.onclick = (e) => {
         const parent = e.target.parentNode;
-        delete projects[parent.lastChild.textContent];
-        console.log(projects);
+        removeProject(parent.lastChild.textContent);
         parent.remove();
-        projects["All Projects"].selected = true;
+        getProject("All Projects").selected = true;
         updateContent();
       };
     }
@@ -81,8 +79,8 @@ export function displayProjects() {
 }
 
 export function displayTodos(projectName) {
-  const projectObj = projects[projectName];
-  const allProjects = projects["All Projects"];
+  const projectObj = getProject(projectName);
+  const allProjects = getProject("All Projects");
 
   const todoDivs = [];
 
@@ -100,6 +98,7 @@ export function displayTodos(projectName) {
         projectObj.removeTodo(todo.title);
       }
       allProjects.removeTodo(todo.title);
+      setLocalStorage();
     };
 
     const textSpan = document.createElement("span");
@@ -112,13 +111,6 @@ export function displayTodos(projectName) {
   return todoDivs;
 }
 
-export function getSelectedProject() {
-  for (let name in projects) {
-    if (projects[name].selected)
-      return name;
-  }
-}
-
 function projectOnClick(e) {
   const projectName = e.target.textContent;
   updateContentHeader(projectName);
@@ -126,9 +118,10 @@ function projectOnClick(e) {
     element.classList.remove("selected");
   });
 
-  projects[getSelectedProject()].selected = false;
-  projects[projectName].selected = true;
+  getProject(getSelected()).selected = false;
+  getProject(projectName).selected = true;
   e.target.classList.add("selected");
 
+  setLocalStorage();
   updateContent();
 }
