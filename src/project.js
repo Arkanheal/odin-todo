@@ -32,6 +32,10 @@ export default class Project {
   addTodo(todo) {
     this.#todos.push(todo);
   }
+
+  removeTodo(title) {
+    this.#todos = this.#todos.filter(t => t.title !== title);
+  }
 }
 
 export let projects = {"All Projects": new Project("All Projects", true)};

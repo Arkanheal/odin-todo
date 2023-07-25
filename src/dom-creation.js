@@ -60,7 +60,6 @@ function createContent() {
 
   const contentHeader = document.createElement("h1");
   contentHeader.id = "content-header";
-
   const selectedProject = getSelectedProject();
   contentHeader.textContent = selectedProject;
   contentDiv.appendChild(contentHeader);
@@ -68,7 +67,7 @@ function createContent() {
   const tasksWrapperDiv = document.createElement("div");
   tasksWrapperDiv.id = "tasks-wrapper";
 
-  const todoDivs = displayTodos();
+  const todoDivs = displayTodos(selectedProject);
   tasksWrapperDiv.append(...todoDivs);
 
   tasksWrapperDiv.appendChild(createAddTaskButton());
@@ -77,6 +76,21 @@ function createContent() {
   contentDiv.appendChild(tasksWrapperDiv);
 
   return contentDiv;
+}
+
+export function updateContent() {
+  const tasksWrapperDiv = document.querySelector("#tasks-wrapper");
+  tasksWrapperDiv.innerHTML = "";
+
+  const contentHeader = document.querySelector("#content-header");
+  const selectedProject = getSelectedProject();
+  contentHeader.textContent = selectedProject;
+
+  const todoDivs = displayTodos(selectedProject);
+  tasksWrapperDiv.append(...todoDivs);
+
+  tasksWrapperDiv.appendChild(createAddTaskButton());
+  tasksWrapperDiv.appendChild(createTaskCreationForm());
 }
 
 function createAddTaskButton() {

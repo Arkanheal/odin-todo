@@ -1,4 +1,4 @@
-import { createBaseHTML, createNav } from "./dom-creation";
+import { createBaseHTML, createNav, updateContent } from "./dom-creation";
 import Project, { projects } from "./project";
 import Todo from "./todo";
 
@@ -19,32 +19,15 @@ export function displayBtn(type) {
 }
 
 export function addTask(name) {
-  const taskWrapperDiv = document.querySelector("#tasks-wrapper");
-  const projectHeader = document.querySelector("#content-header");
-  const projectName = projectHeader.textContent;
-
-  const taskDiv = document.createElement("div");
-  taskDiv.classList.add("task");
-
-  const iconSpan = document.createElement("span");
-  iconSpan.textContent = "ο";
-  iconSpan.id = ("add-task-icon");
-  taskDiv.appendChild(iconSpan);
-  iconSpan.onclick = (e) => {
-    e.target.parentNode.remove();
-  };
-
-  const textSpan = document.createElement("span");
-  textSpan.id = "add-task-text";
-  textSpan.textContent = name;
-  taskDiv.appendChild(textSpan);
-
-  taskWrapperDiv.prepend(taskDiv);
-
   const newTask = new Todo(name, "", "", "LOW");
-  const currentProject = projects[projectName];
+  const currentProjectName = getSelectedProject();
+  if (currentProjectName !== "All Projects") {
+    projects["All Projects"].addTodo(newTask);
+  }
+  const currentProject = projects[getSelectedProject()];
   currentProject.addTodo(newTask);
 
+  updateContent();
   displayBtn("task");
 }
 
@@ -78,20 +61,36 @@ export function displayProjects() {
   return projectDivs;
 }
 
-export function displayTodos() {
-  const projectDivs = [];
-  Object.keys(projects).forEach(element => {
-    const projectDiv = document.createElement("div");
-    projectDiv.classList.add("project");
-    if (projects[element].selected) {
-      projectDiv.classList.add("selected");
-    }
-    projectDiv.textContent = element;
+export function displayTodos(projectName) {
+  const projectObj = projects[projectName];
+  const allProjects = projects["All Projects"];
 
-    projectDiv.onclick = projectOnClick;
-    projectDivs.push(projectDiv);
-  });
-  return projectDivs;
+  const todoDivs = [];
+
+  for (let todo of projectObj.todos) {
+    const taskDiv = document.createElement("div");
+    taskDiv.classList.add("task");
+
+    const iconSpan = document.createElement("span");
+    iconSpan.textContent = "ο";
+    iconSpan.id = ("add-task-icon");
+    taskDiv.appendChild(iconSpan);
+    iconSpan.onclick = (e) => {
+      e.target.parentNode.remove();
+      if (projectName !== "All Projects") {
+        projectObj.removeTodo(todo.title);
+      }
+      allProjects.removeTodo(todo.title);
+    };
+
+    const textSpan = document.createElement("span");
+    textSpan.id = "add-task-text";
+    textSpan.textContent = todo.title;
+    taskDiv.appendChild(textSpan);
+
+    todoDivs.push(taskDiv);
+  }
+  return todoDivs;
 }
 
 export function getSelectedProject() {
@@ -110,6 +109,7 @@ function projectOnClick(e) {
 
   projects[getSelectedProject()].selected = false;
   projects[projectName].selected = true;
-
   e.target.classList.add("selected");
+
+  updateContent();
 }
