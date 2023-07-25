@@ -1,4 +1,4 @@
-import { displayBtn, displayForm } from "./dom-manipulation";
+import { addProjects, addTask, displayBtn, displayForm } from "./dom-manipulation";
 
 export function createBaseHTML() {
   const body = document.querySelector("body");
@@ -40,7 +40,7 @@ function createNav() {
   navTag.appendChild(navHeader);
 
   const projectWrapperDiv = document.createElement("div");
-  projectWrapperDiv.id = "project-wrapper";
+  projectWrapperDiv.id = "projects-wrapper";
   navTag.appendChild(projectWrapperDiv);
 
   projectWrapperDiv.appendChild(createAddProjectButton());
@@ -115,6 +115,7 @@ function createProjectCreationForm() {
 
   const nameInput = document.createElement("input");
   nameInput.type = "text";
+  nameInput.name = "name";
   nameInput.required = true;
   nameInput.minLength = 1;
   formTag.appendChild(nameInput);
@@ -136,10 +137,12 @@ function createProjectCreationForm() {
     e.preventDefault();
     const submitter = e.submitter;
     if (submitter.value === "cancel") {
-      e.target.reset();
       displayBtn("project");
       return;
+    } else {
+      addProjects(e.target.elements.name.value);
     }
+    e.target.reset();
   }
 
   return formTag;
@@ -153,8 +156,9 @@ function createTaskCreationForm() {
 
   const nameInput = document.createElement("input");
   nameInput.type = "text";
-  nameInput.required = true;
+  nameInput.name = "name";
   nameInput.minLength = 1;
+  nameInput.required = true;
   formTag.appendChild(nameInput);
 
   const cancelBtn = document.createElement("button");
@@ -174,10 +178,14 @@ function createTaskCreationForm() {
     e.preventDefault();
     const submitter = e.submitter;
     if (submitter.value === "cancel") {
-      e.target.reset();
       displayBtn("task");
       return;
+    } else {
+      const elements = e.target.elements;
+      const name = elements.name.value;
+      addTask(name);
     }
+    e.target.reset();
   }
 
   return formTag;

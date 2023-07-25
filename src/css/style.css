@@ -79,7 +79,7 @@ main > nav {
   flex-direction: column;
 }
 
-#add-task {
+#add-task, .task {
   background-color: rgba(32, 40, 219, 0.10);
 
   border-radius: 5px;
@@ -93,6 +93,14 @@ main > nav {
 
   display: flex;
   align-items: center;
+}
+
+.task {
+  background-color: rgba(32, 40, 219, 0.02);
+}
+
+.task:hover {
+  background-color: rgba(52, 60, 239, 0.03);
 }
 
 #add-task:hover {
