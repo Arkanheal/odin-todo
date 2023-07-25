@@ -3,8 +3,9 @@ export default class Todo {
   #description;
   #dueDate;
   #priority;
+  #project;
 
-  constructor(title, description, dueDate, priority) {
+  constructor(title, description, dueDate, priority, project) {
     if (!priorities.includes(priority.toUpperCase())) {
       throw new Error("Invalid priority value.");
     }
@@ -13,6 +14,7 @@ export default class Todo {
     this.#description = description;
     this.#dueDate = dueDate;
     this.#priority = priority;
+    this.#project = project;
   }
 
   get title() {
@@ -29,6 +31,10 @@ export default class Todo {
 
   get priority() {
     return this.#priority;
+  }
+
+  get project() {
+    return this.#project;
   }
 
   set title(title) {
@@ -52,3 +58,4 @@ export default class Todo {
 }
 
 const priorities = ["LOW", "MEDIUM", "HIGH"];
+

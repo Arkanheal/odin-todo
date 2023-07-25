@@ -1,3 +1,7 @@
+import { createBaseHTML, createNav } from "./dom-creation";
+import Project, { projects } from "./project";
+import Todo from "./todo";
+
 export function displayForm(type) {
   const btnDiv = document.querySelector(`#add-${type}`);
   btnDiv.style.display = "none";
@@ -16,6 +20,8 @@ export function displayBtn(type) {
 
 export function addTask(name) {
   const taskWrapperDiv = document.querySelector("#tasks-wrapper");
+  const projectHeader = document.querySelector("#content-header");
+  const projectName = projectHeader.textContent;
 
   const taskDiv = document.createElement("div");
   taskDiv.classList.add("task");
@@ -35,31 +41,44 @@ export function addTask(name) {
 
   taskWrapperDiv.prepend(taskDiv);
 
+  const newTask = new Todo(name, "", "", "LOW");
+  const currentProject = projects[projectName];
+  currentProject.addTodo(newTask);
+
   displayBtn("task");
 }
 
 export function addProjects(name) {
-  const projectWrapperDiv = document.querySelector("#projects-wrapper");
-
-  const projectDiv = document.createElement("div");
-  projectDiv.classList.add("project");
-  projectDiv.textContent = name;
-
-  projectDiv.onclick = (e) => {
-    updateContentHeader(e.target.textContent);
-    console.log(projectWrapperDiv.children);
-    Array.from(projectWrapperDiv.children).forEach(element => {
-      element.classList.remove("selected");
-    });
-    e.target.classList.add("selected");
+  if (Object.keys(projects).includes(name)) {
+    return;
   }
-
-  projectWrapperDiv.prepend(projectDiv);
-
+  projects[name] = new Project(name);
+  createBaseHTML();
   displayBtn("project");
 }
 
 function updateContentHeader(projectName) {
   const projectHeader = document.querySelector("#content-header");
   projectHeader.textContent = projectName;
+}
+
+export function displayProjects() {
+  const projectDivs = [];
+  Object.keys(projects).forEach(element => {
+    const projectDiv = document.createElement("div");
+    projectDiv.classList.add("project");
+    projectDiv.textContent = element;
+
+    projectDiv.onclick = projectOnClick;
+    projectDivs.push(projectDiv);
+  });
+  return projectDivs;
+}
+
+function projectOnClick(e) {
+  updateContentHeader(e.target.textContent);
+  Array.from(e.target.parentNode.children).forEach(element => {
+    element.classList.remove("selected");
+  });
+  e.target.classList.add("selected");
 }

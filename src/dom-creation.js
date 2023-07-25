@@ -1,7 +1,8 @@
-import { addProjects, addTask, displayBtn, displayForm } from "./dom-manipulation";
+import { addProjects, addTask, displayBtn, displayForm, displayProjects } from "./dom-manipulation";
 
 export function createBaseHTML() {
   const body = document.querySelector("body");
+  body.innerHTML = "";
 
   body.appendChild(createHeader());
   body.appendChild(createMain());
@@ -32,7 +33,7 @@ function createFooter() {
   return footerTag;
 }
 
-function createNav() {
+export function createNav() {
   const navTag = document.createElement("nav");
 
   const navHeader = document.createElement("h1");
@@ -41,10 +42,14 @@ function createNav() {
 
   const projectWrapperDiv = document.createElement("div");
   projectWrapperDiv.id = "projects-wrapper";
-  navTag.appendChild(projectWrapperDiv);
+
+  const projectDivs = displayProjects();
+  projectWrapperDiv.append(...projectDivs);
 
   projectWrapperDiv.appendChild(createAddProjectButton());
   projectWrapperDiv.appendChild(createProjectCreationForm());
+
+  navTag.appendChild(projectWrapperDiv);
 
   return navTag;
 }
@@ -138,7 +143,6 @@ function createProjectCreationForm() {
     const submitter = e.submitter;
     if (submitter.value === "cancel") {
       displayBtn("project");
-      return;
     } else {
       addProjects(e.target.elements.name.value);
     }
@@ -179,7 +183,6 @@ function createTaskCreationForm() {
     const submitter = e.submitter;
     if (submitter.value === "cancel") {
       displayBtn("task");
-      return;
     } else {
       const elements = e.target.elements;
       const name = elements.name.value;
